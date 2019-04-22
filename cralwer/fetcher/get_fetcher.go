@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io/ioutil"
+	"ithome/cralwer/tools"
 	"net/http"
 	"time"
 
@@ -23,7 +24,7 @@ func Fetch(url string) ([]byte, error) {
 		return nil, fmt.Errorf("wrong status code : %d", resp.StatusCode)
 	}
 	bodyReader := bufio.NewReader(resp.Body)
-	e := determineEncoding(bodyReader)
+	e := tools.DetermineEncoding(bodyReader)
 	utf8Reader := transform.NewReader(bodyReader, e.NewDecoder())
 	return ioutil.ReadAll(utf8Reader)
 }

@@ -28,7 +28,6 @@ func TestPostFetcher(t *testing.T) {
 			replys := eachMap["R"].([]interface{})
 			// fmt.Println(item["Ci"], item["N"], item["Y"], item["T"], item["Ta"])
 			for _, reply := range replys {
-				fmt.Println("reply is : ", reply)
 				eachR := reply.(map[string]interface{})
 				fmt.Println(eachR["Ci"], eachR["N"], eachR["Y"], eachR["T"], eachR["Ta"])
 			}

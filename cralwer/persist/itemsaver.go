@@ -26,7 +26,7 @@ func ArticleURLSaver() (chan model.ArticleURL, error) {
 
 	out := make(chan model.ArticleURL)
 	go func() {
-		stmtIns, err := db.Prepare("INSERT INTO ithome_urls_2011 (time, url, has_fetched) VALUES( ?, ? , 0)")
+		stmtIns, err := db.Prepare("INSERT INTO ithome_urls_2016 (time, url, has_fetched) VALUES( ?, ? , 0)")
 		if err != nil {
 			log.Printf("Item Saver: error Prepare %v", err)
 		}
@@ -67,7 +67,7 @@ func CommentDeviceSaver() (chan model.DeviceList, error) {
 
 	out := make(chan model.DeviceList)
 	go func() {
-		stmtIns, err := db.Prepare("INSERT INTO ithome_devices_2016 (article_id, devices) VALUES( ?, ?)")
+		stmtIns, err := db.Prepare("INSERT INTO ithome_devices_2017 (article_id, devices) VALUES( ?, ?)")
 		if err != nil {
 			log.Printf("Item Saver: error Prepare %v", err)
 		}
@@ -76,7 +76,7 @@ func CommentDeviceSaver() (chan model.DeviceList, error) {
 		itemCount := 0
 		for {
 			commentDevices := <-out
-			log.Printf("Item Saver: got item #%d: %v", itemCount, len(commentDevices.DeviceList))
+			log.Printf("Item Saver: got item num: #%d: devices num: %v", itemCount, len(commentDevices.DeviceList))
 			itemCount++
 			go saveCommentDevices(stmtIns, commentDevices)
 		}
@@ -87,7 +87,7 @@ func CommentDeviceSaver() (chan model.DeviceList, error) {
 
 // saveCommentDevices here
 func saveCommentDevices(stmtIns *sql.Stmt, commentDevices model.DeviceList) {
-	_, err := stmtIns.Exec(commentDevices.URL, strings.Join(commentDevices.DeviceList, ","))
+	_, err := stmtIns.Exec(commentDevices.ArticleID, strings.Join(commentDevices.DeviceList, ","))
 	if err != nil {
 		log.Printf("Item Saver: error Exec item %v: %v", commentDevices, err)
 	}

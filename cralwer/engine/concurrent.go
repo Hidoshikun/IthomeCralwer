@@ -42,7 +42,7 @@ func (e *ConcurrentEngine) Run(Seeds []Request) {
 		result := <-out
 		for _, item := range result.Items {
 			item1 := item.(model.DeviceList)
-			log.Printf("got item: %v", len(item1.DeviceList))
+			log.Printf("Engine: got item from: %v, devices num: %v", item1.ArticleID, len(item1.DeviceList))
 			go func(i model.DeviceList) { e.ItemChan <- i }(item1)
 		}
 

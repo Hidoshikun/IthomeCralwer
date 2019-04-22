@@ -6,7 +6,7 @@ import (
 )
 
 func worker(r Request) (ParseResult, error) {
-	body, err := fetcher.CommentFetcher(r.URL)
+	body, err := fetcher.Fetch(r.URL)
 	if err != nil {
 		log.Printf("Fetch: error fetching url %s: %v", r.URL, err)
 		return ParseResult{}, err

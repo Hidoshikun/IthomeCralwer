@@ -3,8 +3,8 @@ package parser
 import (
 	"ithome/cralwer/engine"
 	"ithome/cralwer/model"
+	"ithome/cralwer/tools"
 	"log"
-	"regexp"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -48,20 +48,10 @@ func ParseArticleList(contents []byte, _url string) engine.ParseResult {
 				log.Printf("test error %v", err)
 			}
 			articleURL := model.ArticleURL{
-				URL:  ReMatch(articleURLRe, content),
-				Time: ReMatch(articleTimeRe, content),
+				URL:  tools.ReMatch(articleURLRe, content),
+				Time: tools.ReMatch(articleTimeRe, content),
 			}
 			parserResult.Items = append(parserResult.Items, articleURL)
 		})
 	return parserResult
-}
-
-// ReMatch Apply regexp
-func ReMatch(regex string, content string) string {
-	re := regexp.MustCompile(regex)
-	match := re.FindStringSubmatch(content)
-	if len(match) == 0 {
-		return ""
-	}
-	return match[0]
 }

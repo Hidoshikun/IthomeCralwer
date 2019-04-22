@@ -19,7 +19,7 @@ type ArticleURL struct {
 
 // DeviceList here
 type DeviceList struct {
-	URL        string
+	ArticleID  int
 	DeviceList []string
 }
 
