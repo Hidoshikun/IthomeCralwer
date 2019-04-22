@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"ithome/cralwer/engine"
-	"ithome/cralwer/model"
-	"ithome/cralwer/tools"
+	"IthomeCralwer/cralwer/engine"
+	"IthomeCralwer/cralwer/model"
+	"IthomeCralwer/cralwer/tools"
 	"log"
 	"strings"
 

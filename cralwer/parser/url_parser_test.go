@@ -1,9 +1,10 @@
 package parser
 
 import (
+	"IthomeCralwer/cralwer/fetcher"
+	"IthomeCralwer/cralwer/model"
+	"IthomeCralwer/cralwer/tools"
 	"fmt"
-	"ithome/cralwer/fetcher"
-	"ithome/cralwer/model"
 	"strings"
 	"testing"
 
@@ -29,8 +30,8 @@ func TestUrlParser(t *testing.T) {
 			if err != nil {
 				t.Logf("test error %v", err)
 			}
-			articleURL.URL = ReMatch(articleURLRe, content)
-			articleURL.Time = ReMatch(articleTimeRe, content)
+			articleURL.URL = tools.ReMatch(articleURLRe, content)
+			articleURL.Time = tools.ReMatch(articleTimeRe, content)
 			fmt.Println(articleURL)
 		})
 

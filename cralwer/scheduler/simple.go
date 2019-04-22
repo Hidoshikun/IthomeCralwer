@@ -1,6 +1,6 @@
 package scheduler
 
-import "ithome/cralwer/engine"
+import "IthomeCralwer/cralwer/engine"
 
 // SimpleScheduler here
 type SimpleScheduler struct {

@@ -9,7 +9,7 @@ import (
 
 func TestPostFetcher(t *testing.T) {
 	urla := "https://www.ithome.com/html/it/340608.htm"
-	html, err := CommentFetcher(urla)
+	html, err := Fetch(urla)
 	if err != nil {
 		panic(err)
 	}

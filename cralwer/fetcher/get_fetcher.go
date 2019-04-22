@@ -1,19 +1,17 @@
 package fetcher
 
 import (
+	"IthomeCralwer/cralwer/tools"
 	"bufio"
 	"fmt"
 	"io/ioutil"
-	"ithome/cralwer/tools"
 	"net/http"
-	"time"
 
 	"golang.org/x/text/transform"
 )
 
 // Fetch content from given url
 func Fetch(url string) ([]byte, error) {
-	time.Sleep(100 * time.Millisecond)
 	fmt.Println("fetching url: ", url)
 	resp, err := http.Get(url)
 	if err != nil {

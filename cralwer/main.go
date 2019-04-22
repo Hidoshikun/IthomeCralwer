@@ -1,13 +1,15 @@
 package main
 
 import (
+	"IthomeCralwer/cralwer/config"
+	"IthomeCralwer/cralwer/engine"
+	"IthomeCralwer/cralwer/parser"
+	"IthomeCralwer/cralwer/persist"
+	"IthomeCralwer/cralwer/scheduler"
+	"IthomeCralwer/cralwer/tools"
+
 	"database/sql"
-	"ithome/cralwer/engine"
-	"ithome/cralwer/parser"
-	"ithome/cralwer/persist"
-	"ithome/cralwer/scheduler"
-	"ithome/cralwer/tools"
-	_ "strconv"
+	"strconv"
 
 	// used import
 	_ "github.com/go-sql-driver/mysql"
@@ -15,19 +17,41 @@ import (
 
 const articleIDRe = `/([\d]*).htm`
 
-/***
-// Fetch URL
+// Fetch comment devices
 func main() {
-	// start a ItemSaver to save items
-	itemChan, err := persist.ArticleURLSaver()
+	fetchComment()
+}
+
+// fetchComment
+// 获取所有评论接口
+func fetchComment() {
+	itemChan, err := persist.CommentDeviceSaver()
 	if err != nil {
 		panic(err)
 	}
 
 	e := engine.ConcurrentEngine{
 		Scheduler:   &scheduler.SimpleScheduler{},
-		WorkerCount: 4,
+		WorkerCount: 200,
 		ItemChan:    itemChan,
+	}
+	Seeds := getURLSeed()
+	e.Run(Seeds)
+}
+
+// fetchArticleURL
+// 获取所有文章URL
+func fetchArticleURL() {
+	// start a ItemSaver to save items
+	/// itemChan, err := persist.ArticleURLSaver()
+	// if err != nil {
+	//	panic(err)
+	// }
+
+	e := engine.ConcurrentEngine{
+		Scheduler:   &scheduler.SimpleScheduler{},
+		WorkerCount: 4,
+		// ItemChan:    itemChan,
 	}
 	Seeds := []engine.Request{}
 
@@ -39,25 +63,10 @@ func main() {
 	}
 	e.Run(Seeds)
 }
-***/
 
-// Fetch comment devices
-func main() {
-	itemChan, err := persist.CommentDeviceSaver()
-	if err != nil {
-		panic(err)
-	}
-
-	e := engine.ConcurrentEngine{
-		Scheduler:   &scheduler.SimpleScheduler{},
-		WorkerCount: 200,
-		ItemChan:    itemChan,
-	}
-	Seeds := getSeed()
-	e.Run(Seeds)
-}
-
-func getSeed() []engine.Request {
+// getURLSeed
+// 从数据库取符合条件的URL，生成engine的种子传入
+func getURLSeed() []engine.Request {
 	db, err := sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/nlp?charset=utf8")
 	if err != nil {
 		panic(err)
@@ -68,7 +77,7 @@ func getSeed() []engine.Request {
 		panic(err)
 	}
 
-	rows, err := db.Query("SELECT url FROM ithome_urls_2017")
+	rows, err := db.Query("SELECT url FROM ithome_urls_" + config.Year)
 	if err != nil {
 		panic(err)
 	}
@@ -81,6 +90,7 @@ func getSeed() []engine.Request {
 		if err != nil {
 			panic(err)
 		}
+
 		articleID := tools.ReSubMatch(articleIDRe, urla)
 		urlb := "https://m.ithome.com/api/comment/newscommentlistget?NewsID=" + articleID + "&LapinID=&MaxCommentID=0&Latest="
 		seeds = append(seeds, engine.Request{
