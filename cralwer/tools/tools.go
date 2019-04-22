@@ -40,3 +40,20 @@ func DetermineEncoding(r *bufio.Reader) encoding.Encoding {
 	e, _, _ := charset.DetermineEncoding(bytes, "")
 	return e
 }
+
+const articleIDRe1 = `https://www.ithome.com/html/([A-Za-z0-9]*)/([\d]{6}).htm`
+
+const articleIDRe2 = `https://www.ithome.com/0/([\d]{3})/([\d]{3}).htm`
+
+// GetArticleID get the article id from the given url
+func GetArticleID(url string) string {
+	re := regexp.MustCompile(articleIDRe1)
+	match := re.FindAllStringSubmatch(url, -1)
+	if len(match) != 0 {
+		return match[0][2]
+	}
+
+	re2 := regexp.MustCompile(articleIDRe2)
+	matchs := re2.FindAllStringSubmatch(url, -1)
+	return matchs[0][1] + matchs[0][2]
+}

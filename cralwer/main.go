@@ -15,8 +15,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const articleIDRe = `/([\d]*).htm`
-
 // Fetch comment devices
 func main() {
 	fetchComment()
@@ -43,19 +41,19 @@ func fetchComment() {
 // 获取所有文章URL
 func fetchArticleURL() {
 	// start a ItemSaver to save items
-	/// itemChan, err := persist.ArticleURLSaver()
-	// if err != nil {
-	//	panic(err)
-	// }
+	itemChan, err := persist.CommentDeviceSaver()
+	if err != nil {
+		panic(err)
+	}
 
 	e := engine.ConcurrentEngine{
 		Scheduler:   &scheduler.SimpleScheduler{},
-		WorkerCount: 4,
-		// ItemChan:    itemChan,
+		WorkerCount: 2,
+		ItemChan:    itemChan,
 	}
 	Seeds := []engine.Request{}
 
-	for i := 2200; i < 3350; i++ {
+	for i := 250; i < 1300; i++ {
 		Seeds = append(Seeds, engine.Request{
 			URL:        "https://www.ithome.com/list/list_" + strconv.Itoa(i) + ".html",
 			ParserFunc: parser.ParseArticleList,
@@ -91,7 +89,7 @@ func getURLSeed() []engine.Request {
 			panic(err)
 		}
 
-		articleID := tools.ReSubMatch(articleIDRe, urla)
+		articleID := tools.GetArticleID(urla)
 		urlb := "https://m.ithome.com/api/comment/newscommentlistget?NewsID=" + articleID + "&LapinID=&MaxCommentID=0&Latest="
 		seeds = append(seeds, engine.Request{
 			URL:        urlb,

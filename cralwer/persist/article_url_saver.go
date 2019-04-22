@@ -1,6 +1,7 @@
 package persist
 
 import (
+	"IthomeCralwer/cralwer/config"
 	"IthomeCralwer/cralwer/model"
 	"database/sql"
 	"log"
@@ -24,7 +25,7 @@ func ArticleURLSaver() (chan model.ArticleURL, error) {
 
 	out := make(chan model.ArticleURL)
 	go func() {
-		stmtIns, err := db.Prepare("INSERT INTO ithome_urls_2016 (time, url, has_fetched) VALUES( ?, ? , 0)")
+		stmtIns, err := db.Prepare("INSERT INTO ithome_urls_" + config.Year + " (time, url, has_fetched) VALUES( ?, ? , 0)")
 		if err != nil {
 			log.Printf("Item Saver: error Prepare %v", err)
 		}
